@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{fragments/main_layout}">
+<head>
+<title>Index</title>
+</head>
+<body>
+
+	<div layout:fragment="content" class="container mySpace">
+	     <form action="/index" class="form-inline">
+	        <div class="form-group mb-2">
+	         <input type="text" class="form-control" name="movie_name" placeholder="Search Movie" />
+	         <input type="submit" value="Search"  class="btn btn-primary"/>
+	        </div>
+	     </form>
+		<div class="card">
+			<div class="card card-body">
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th>Release Year</th>
+							<th>Movie</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="movie:${movies}">
+							<td th:text="${movie.release_year}"></td>
+							<td><a th:href="@{'/movie/' + ${movie.name}}" th:text="${movie.name}" class="btn btn-dark"></a></td>
+						</tr>
+					</tbody>
+
+				</table>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
