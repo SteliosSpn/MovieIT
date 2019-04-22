@@ -41,6 +41,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				  .anyRequest().hasAnyRole("USER,ADMIN")
 				//.antMatchers("/users","/addTask").hasRole("ADMIN")
 				.and().formLogin().loginPage("/login").permitAll()
-				.defaultSuccessUrl("/profile").and().logout().logoutSuccessUrl("/login");
+				.defaultSuccessUrl("/index").and().logout().logoutSuccessUrl("/login");
 	}
 }

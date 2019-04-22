@@ -8,6 +8,6 @@ import com.movieit.models.Movie;
 
 public interface MovieRepository  extends JpaRepository<Movie, Integer> {
 	List<Movie> findByNameLike(String name);
-	List<Movie> findByName(String name);
+	Movie findByName(String name);
 
 }

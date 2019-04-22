@@ -25,7 +25,7 @@ public class MovieService {
 		return  movieRepository.findByNameLike("%"+name+"%");
 	}
 	
-	public List<Movie> findByName(String name){
+	public Movie findByName(String name){
 		return movieRepository.findByName(name);
 	}
 	

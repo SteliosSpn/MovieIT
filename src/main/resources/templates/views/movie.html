@@ -19,6 +19,7 @@
 							<th>Release Year</th>
 							<th>Image</th>
 							<th>YT URL</th>
+							<th>Rating</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -27,10 +28,29 @@
 							<td th:text="${movie.release_year}"></td>
 							<td th:text="${movie.image_url}"></td>
 							<td th:text="${movie.trailer_url}"></td>
+							<td th:text="${rating}"></td>
 						</tr>
 					</tbody>
 
 				</table>
+				
+				<div th:if="!${isRated}" layout:fragment="content" class="container mySpace">
+	
+		<form th:action="@{/rate}" th:object="${movie}" method="post">
+		
+			<div class="form-group">
+				<label for="total_score" class="form-control-label">Rate Here</label> <input
+					type="number" min="1" max="5" class="form-control" th:field="*{total_score}" id="total_score" />
+				<div class="text text-danger" th:if="${#fields.hasErrors('total_score')}"
+					th:errors="*{total_score}"></div>
+			</div>
+			
+			<input type="submit" value="Submit" class="btn btn-primary" />
+		
+			</form>
+			</div>
+			<div th:if="${isRated}" layout:fragment="content" class="container mySpace">Movie already Rated</div>
+			
 			</div>
 		</div>
 	</div>
