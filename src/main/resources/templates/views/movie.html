@@ -52,6 +52,29 @@
 			<div th:if="${isRated}" layout:fragment="content" class="container mySpace">Movie already Rated</div>
 			
 			</div>
+			
+			<div th:if="!${isFavourite}" layout:fragment="content" class="container mySpace">
+	
+		<form th:action="@{/addToFavourites}" th:object="${movie}" method="post">
+		
+			
+			
+			<input type="submit" value="Add to Favourites" class="btn btn-primary" />
+		
+			</form>
+			</div>
+			
+			<div th:if="${isFavourite}" layout:fragment="content" class="container mySpace">
+	
+		<form th:action="@{/removeFromFavourites}" th:object="${movie}" method="post">
+		
+			
+			
+			<input type="submit" value="Remove from Favourites" class="btn btn-primary" />
+		
+			</form>
+			</div>
+			
 		</div>
 	</div>
 </body>

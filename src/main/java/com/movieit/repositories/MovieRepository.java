@@ -10,4 +10,5 @@ public interface MovieRepository  extends JpaRepository<Movie, Integer> {
 	List<Movie> findByNameLike(String name);
 	Movie findByName(String name);
 
+	
 }

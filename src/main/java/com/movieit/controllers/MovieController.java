@@ -22,11 +22,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.movieit.models.Favourite;
 import com.movieit.models.Movie;
 import com.movieit.models.Rating;
 import com.movieit.models.User;
+import com.movieit.repositories.FavouriteRepository;
 import com.movieit.repositories.MovieRepository;
 import com.movieit.repositories.RatingRepository;
+import com.movieit.services.FavouriteService;
 import com.movieit.services.MovieService;
 import com.movieit.services.RatingService;
 import com.movieit.services.UserService;
@@ -45,6 +48,12 @@ public class MovieController {
 	
 	@Autowired
 	private RatingRepository ratingRepo;
+	
+	@Autowired
+	private FavouriteService favouriteService;
+	
+	@Autowired
+	private FavouriteRepository favouriteRepo;
 	
 	@Autowired
 	private MovieService ms;
@@ -82,6 +91,7 @@ public class MovieController {
 		 model.addAttribute("movie", new Movie());
 		 double score = 0.0;
 		 boolean isRated = false;
+		 boolean isFavourite = false;
 		// System.out.println(movie_name);
 		 Movie myMovie = ms.findByName(movie_name);
 		 if(myMovie.getTotal_votes() != 0) {
@@ -99,12 +109,21 @@ public class MovieController {
 			model.addAttribute("rating","No Rating yet"); 
 		 }
 		 String email = (String) session.getAttribute("email");
+		 
 		 Rating rating = new Rating();
 		 rating.setUser_email(email);
 		 rating.setMovie_id(myMovie.getMovie_id());
 		 isRated=ratingService.findIfAlreadyRated(rating);
 		 if(isRated)model.addAttribute("isRated",true);
 		 else model.addAttribute("isRated",false);
+		 
+		 Favourite favourite=new Favourite();
+		 favourite.setUser_email(email);
+		 favourite.setMovie_id(myMovie.getMovie_id());
+		 isFavourite=favouriteService.findIfFavourite(favourite);
+		 if(isFavourite)model.addAttribute("isFavourite",true);
+		 else model.addAttribute("isFavourite",false);
+		 
 		 model.addAttribute("movies", myMovie);
 		 session.setAttribute("movie", myMovie);
 		 return "views/movie";
@@ -135,4 +154,45 @@ public class MovieController {
 			return "redirect:/movie/"+myMovie.getName();
 			//return "views/movie";
 		}
+	 
+	 @PostMapping("/addToFavourites")
+	 	public String addToFavourites(HttpSession session,@Valid @ModelAttribute("movie") Movie movie,BindingResult bindingResult,
+	 			Model model) {
+			if(bindingResult.hasErrors()) {
+				return "views/movie";
+			}
+			Movie myMovie = (Movie) session.getAttribute("movie");
+			
+			String email = (String) session.getAttribute("email");
+			Favourite favourite = new Favourite();
+			favourite.setMovie_id(myMovie.getMovie_id());
+			favourite.setUser_email(email);
+			
+			favouriteRepo.save(favourite);
+
+			//redirect:/index.html
+			return "redirect:/movie/"+myMovie.getName();
+			//return "views/movie";
+		}
+	 
+	 @PostMapping("/removeFromFavourites")
+	 	public String removeFromFavourites(HttpSession session,@Valid @ModelAttribute("movie") Movie movie,BindingResult bindingResult,
+	 			Model model) {
+			if(bindingResult.hasErrors()) {
+				return "views/movie";
+			}
+			Movie myMovie = (Movie) session.getAttribute("movie");
+			
+			String email = (String) session.getAttribute("email");
+			Favourite favourite = new Favourite();
+			favourite.setMovie_id(myMovie.getMovie_id());
+			favourite.setUser_email(email);
+			
+			favouriteRepo.delete(favourite);
+
+			//redirect:/index.html
+			return "redirect:/movie/"+myMovie.getName();
+			//return "views/movie";
+		}
+	 
 }
