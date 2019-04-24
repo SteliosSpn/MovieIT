@@ -1,10 +1,40 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{fragments/main_layout}">
 <head>
 <meta charset="ISO-8859-1">
-<title>Insert title here</title>
+<title>My Profile</title>
 </head>
 <body>
+
+<div class="card">
+			<div class="card card-body">
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th>Release Year</th>
+							<th>Movie</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="movie:${profilemovies}">
+							<td th:text="${movie.release_year}"></td>
+							<td><a th:href="@{'/movie/' + ${movie.name}}" th:text="${movie.name}" class="btn btn-dark"></a></td>
+							<td><form th:action="@{/removeFromFavouritesPR}" th:object="${movie}"  method="post">
+							<input type="hidden"  th:field="*{movie_id}" id="movie_id" value="${movie.movie_id}" />
+		
+			
+			
+			<input type="submit" value="Remove from Favourites" class="btn btn-primary" />
+		
+			</form></td>
+						</tr>
+					</tbody>
+
+				</table>
+			</div>
+		</div>
 
 </body>
 </html>
