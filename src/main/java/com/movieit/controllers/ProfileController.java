@@ -19,8 +19,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.movieit.models.Favourite;
 import com.movieit.models.Movie;
+import com.movieit.models.User;
 import com.movieit.repositories.FavouriteRepository;
 import com.movieit.repositories.MovieRepository;
+import com.movieit.repositories.UserRepository;
 import com.movieit.services.MovieService;
 import com.movieit.services.UserService;
 
@@ -39,11 +41,15 @@ public class ProfileController {
 	@Autowired 
 	private MovieRepository movieRepo;
 	
+	@Autowired
+	private UserRepository userRepo;
+	
 	@GetMapping("/profile")
 	public String showProfilePage(HttpSession session,Model profilemodel, Principal principal, 
 			@RequestParam(defaultValue="")  String activity) {
 		
 		profilemodel.addAttribute("movie", new Movie());
+		//profilemodel.addAttribute("user",new User());
 		List<Movie> showMovies = new ArrayList<Movie>();
 		String email=(String)session.getAttribute("email");
 		Favourite favourite=new Favourite();
@@ -58,11 +64,18 @@ public class ProfileController {
 				Movie movie = tempMovie.get();
 				showMovies.add(movie);
 				}
+		
 			//showMovies.add(movieRepo.findById(favmovies));
 			
 		}
 		profilemodel.addAttribute("profilemovies", showMovies);
 		
+		User user =new User();
+		Optional <User> userlist = userRepo.findById(email);
+		if(userlist.isPresent()){
+			user=userlist.get();
+		}
+		profilemodel.addAttribute("user",user);
 		
 		
 		return "views/profile";
@@ -72,7 +85,7 @@ public class ProfileController {
  	public String removeFromFavourites(HttpSession session,@Valid @ModelAttribute("movie") Movie movie,BindingResult bindingResult,
  			Model profilemodel) {
 		if(bindingResult.hasErrors()) {
-			return "views/profile";
+			return "redirect:/profile";
 		}
 		//Movie myMovie = (Movie) session.getAttribute("movie");
 		
@@ -80,12 +93,21 @@ public class ProfileController {
 		Favourite favourite = new Favourite();
 		favourite.setMovie_id(movie.getMovie_id());
 		favourite.setUser_email(email);
-		System.out.println(movie.getName());
-		//favouriteRepo.delete(favourite);
+		System.out.println(movie.getMovie_id());
+		favouriteRepo.delete(favourite);
 
 		//redirect:/index.html
 		return "redirect:/profile";
 		//return "views/movie";
+	}
+	
+	@PostMapping("/editProfile")
+ 	public String editProfile(HttpSession session,@Valid @ModelAttribute("user") User user,BindingResult bindingResult, Model profilemodel) {
+		if(bindingResult.hasErrors()) {
+			return "redirect:/profile";
+		}
+		
+			return "redirect:/profile";
 	}
 
 }

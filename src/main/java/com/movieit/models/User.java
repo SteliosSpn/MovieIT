@@ -30,7 +30,25 @@ public class User {
 	private String password;
 	private String username;
 	private String surname;
+	private String gender;
+	private Short age;
 	
+
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+
+	public Short getAge() {
+		return age;
+	}
+
+	public void setAge(Short age) {
+		this.age = age;
+	}
 
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "USER_ROLES", joinColumns={

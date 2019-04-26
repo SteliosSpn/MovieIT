@@ -18,23 +18,66 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr th:each="movie:${profilemovies}">
-							<td th:text="${movie.release_year}"></td>
-							<td><a th:href="@{'/movie/' + ${movie.name}}" th:text="${movie.name}" class="btn btn-dark"></a></td>
-							<td><form th:action="@{/removeFromFavouritesPR}" th:object="${movie}"  method="post">
-							<input type="hidden"  th:field="*{movie_id}" id="movie_id" value="${movie.movie_id}" />
-		
-			
+						<tr th:each="m:${profilemovies}">
+							<td th:text="${m.release_year}"></td>
+							<td><a th:href="@{'/movie/' + ${m.name}}" th:text="${m.name}" class="btn btn-dark"></a></td>
+							<td><form th:action="@{/removeFromFavouritesPR}" method="post">
+							<input type="hidden" name="movie_id" id="movie_id" th:value="${m.movie_id}" />
 			
 			<input type="submit" value="Remove from Favourites" class="btn btn-primary" />
 		
 			</form></td>
 						</tr>
 					</tbody>
+					
+					
 
 				</table>
 			</div>
 		</div>
-
+		
+		<div layout:fragment="content" class="container mySpace" th:each="u:${user}">
+		
+						<p th:inline="text" >Username : [[${u.username}]]</p>
+							
+							<form th:action="@{/editProfile}" method="post">
+							
+							<div class="form-group">
+				<label for="name" class="form-control-label">Name</label> <input
+					type="text" class="form-control" th:field="*{user.name}" id="name" />
+				<div class="text text-danger" th:if="${#fields.hasErrors('user.name')}"
+					th:errors="*{user.name}"></div>
+			</div>
+			
+			<div class="form-group">
+				<label for="surname" class="form-control-label">Surname</label> <input
+					type="text" class="form-control" th:field="*{user.surname}" id="surname" />
+				<div class="text text-danger" th:if="${#fields.hasErrors('user.surname')}"
+					th:errors="*{user.surname}"></div>
+			</div>
+			
+			<div class="form-group">
+				<label for="age" class="form-control-label">Age</label> <input
+					type="number" class="form-control" th:field="*{user.age}" id="age" min="12" max="99"/>
+				<div class="text text-danger" th:if="${#fields.hasErrors('user.age')}"
+					th:errors="*{user.age}"></div>
+			</div>
+			
+			<div class="form-group">
+				<label for="gender" class="form-control-label">Gender</label> <select
+					 class="form-control" th:field="*{user.gender}" id="gender" >
+					 <option th:value="Male">Male</option><option th:value="Female">Female</option></select>
+				<div class="text text-danger" th:if="${#fields.hasErrors('user.age')}"
+					th:errors="*{user.age}"></div>
+			</div>
+			
+			
+			
+			<input type="submit" value="Update Profile" class="btn btn-primary" />
+		
+			</form>
+						
+					
+</div>
 </body>
 </html>
