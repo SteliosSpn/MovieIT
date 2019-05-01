@@ -104,9 +104,21 @@ public class ProfileController {
 	@PostMapping("/editProfile")
  	public String editProfile(HttpSession session,@Valid @ModelAttribute("user") User user,BindingResult bindingResult, Model profilemodel) {
 		if(bindingResult.hasErrors()) {
-			return "redirect:/profile";
+			//return "redirect:/profile";
 		}
+		String email = (String) session.getAttribute("email");
+		User dbuser =new User();
+		Optional <User> userlist = userRepo.findById(email);
+		if(userlist.isPresent()){
+			dbuser=userlist.get();
+		}
+		//System.out.println(dbuser.getPassword());
 		
+		user.setEmail(email);
+		user.setUsername(dbuser.getUsername());
+		user.setPassword(dbuser.getPassword());
+	
+		//userRepo.save(user);
 			return "redirect:/profile";
 	}
 

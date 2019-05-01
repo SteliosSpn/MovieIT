@@ -20,11 +20,9 @@ import org.hibernate.validator.constraints.NotEmpty;
 public class User {
 
 	@Id
-	@Email
-	@NotEmpty
 	@Column(unique = true)
 	private String email;
-	@NotEmpty
+	
 	private String name;
 	@Size(min = 4)
 	private String password;
