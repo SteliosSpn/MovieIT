@@ -77,5 +77,33 @@
 			
 		</div>
 	</div>
+	
+	<div layout:fragment="content" class="container mySpace" th:each="r:${reviews}">
+	<p th:inline="text" >Username : [[${r.user_email}]]</p>
+	<p th:inline="text" >Review Date : [[${r.review_date}]]</p>
+	<p th:inline="text" >Review  : [[${r.review_body}]]</p>
+	
+	</div>
+	
+		<div layout:fragment="content" class="container mySpace" >
+		
+						
+							
+							<form th:action="@{/addReview}" th:object="${review}" method="post">
+							
+							<div class="form-group">
+				<label for="review_body" class="form-control-label">Review</label> <input
+					type="text" class="form-control" th:field="*{review_body}" id="review_body" />
+				<div class="text text-danger" th:if="${#fields.hasErrors('review_body')}"
+					th:errors="*{review_body}"></div>
+			</div>
+			
+			
+			<input type="submit" value="Submit Review" class="btn btn-primary" />
+		
+			</form>
+						
+					
+      </div>
 </body>
 </html>

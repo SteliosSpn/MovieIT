@@ -5,8 +5,12 @@ import java.math.RoundingMode;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.Principal;
+import java.sql.Date;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -25,10 +29,14 @@ import org.springframework.web.multipart.MultipartFile;
 import com.movieit.models.Favourite;
 import com.movieit.models.Movie;
 import com.movieit.models.Rating;
+import com.movieit.models.Review;
 import com.movieit.models.User;
+import com.movieit.models.Userinfo;
 import com.movieit.repositories.FavouriteRepository;
 import com.movieit.repositories.MovieRepository;
 import com.movieit.repositories.RatingRepository;
+import com.movieit.repositories.ReviewRepository;
+import com.movieit.repositories.UserinfoRepository;
 import com.movieit.services.FavouriteService;
 import com.movieit.services.MovieService;
 import com.movieit.services.RatingService;
@@ -57,6 +65,12 @@ public class MovieController {
 	
 	@Autowired
 	private MovieService ms;
+	
+	@Autowired
+	private ReviewRepository reviewRepo;
+	
+	@Autowired
+	private UserinfoRepository userinfoRepo;
 	
 	private static final String path = "C:\\Users\\Stelios\\workspace\\MovieIT\\src\\main\\resources\\images\\";
 	
@@ -124,7 +138,34 @@ public class MovieController {
 		 if(isFavourite)model.addAttribute("isFavourite",true);
 		 else model.addAttribute("isFavourite",false);
 		 
+		 
+		 
+		 List<Object[]> reviewList=reviewRepo.findReviewsforMovie(myMovie.getMovie_id());
+		 List<Review> finalReviewList=new ArrayList<Review>();
+		 for(Object[] review1:reviewList){
+			 String review_body = (String)review1[0];
+			 //System.out.println(review_body);
+			 Date review_date = (Date)review1[1];
+			// System.out.println(review_date);
+			 String user_email = (String)review1[2];
+			// System.out.println(user_email);
+			 Review review = new Review();
+			 review.setMovie_id(myMovie.getMovie_id());
+			 review.setReview_body(review_body);
+			 review.setReview_date(review_date);
+			 //review.setUser_email(user_email);
+			 review.setUser_email(userinfoRepo.getUsername(user_email));
+			 finalReviewList.add(review);
+		 }
+			
+			
+				
+				
+			
+		 
 		 model.addAttribute("movies", myMovie);
+		 model.addAttribute("reviews", finalReviewList);
+		 model.addAttribute("review",new Review());
 		 session.setAttribute("movie", myMovie);
 		 return "views/movie";
 	 }
@@ -193,6 +234,27 @@ public class MovieController {
 			//redirect:/index.html
 			return "redirect:/movie/"+myMovie.getName();
 			//return "views/movie";
+		}
+	 
+		@PostMapping("/addReview")
+	 	public String addReview(HttpSession session,@Valid @ModelAttribute("review") Review review,BindingResult bindingResult, Model model) {
+			if(bindingResult.hasErrors()) {
+				//return "redirect:/profile";
+			}
+			Movie myMovie = (Movie) session.getAttribute("movie");
+			String email = (String) session.getAttribute("email");
+			review.setMovie_id(myMovie.getMovie_id());
+			review.setUser_email(email);
+			review.setReview_date(new Date(System.currentTimeMillis()));
+		
+			//System.out.println(review.getReview_body());
+			//System.out.println(review.getMovie_id());
+			//System.out.println(review.getReview_date());
+			
+			
+			//reviewRepo.save(review);
+			
+			return "redirect:/movie/"+myMovie.getName();
 		}
 	 
 }

@@ -20,9 +20,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.movieit.models.Favourite;
 import com.movieit.models.Movie;
 import com.movieit.models.User;
+import com.movieit.models.Userinfo;
 import com.movieit.repositories.FavouriteRepository;
 import com.movieit.repositories.MovieRepository;
 import com.movieit.repositories.UserRepository;
+import com.movieit.repositories.UserinfoRepository;
 import com.movieit.services.MovieService;
 import com.movieit.services.UserService;
 
@@ -43,6 +45,9 @@ public class ProfileController {
 	
 	@Autowired
 	private UserRepository userRepo;
+	
+	@Autowired
+	private UserinfoRepository userinfoRepo;
 	
 	@GetMapping("/profile")
 	public String showProfilePage(HttpSession session,Model profilemodel, Principal principal, 
@@ -70,12 +75,21 @@ public class ProfileController {
 		}
 		profilemodel.addAttribute("profilemovies", showMovies);
 		
-		User user =new User();
+		/*User user =new User();
 		Optional <User> userlist = userRepo.findById(email);
 		if(userlist.isPresent()){
 			user=userlist.get();
 		}
-		profilemodel.addAttribute("user",user);
+		profilemodel.addAttribute("user",user);*/
+		
+		Userinfo userinfo= new Userinfo();
+		Optional <Userinfo> userinfolist = userinfoRepo.findById(email);
+		if(userinfolist.isPresent()){
+			userinfo=userinfolist.get();
+		}
+		profilemodel.addAttribute("userinfo",userinfo);
+		
+		
 		
 		
 		return "views/profile";
@@ -102,23 +116,24 @@ public class ProfileController {
 	}
 	
 	@PostMapping("/editProfile")
- 	public String editProfile(HttpSession session,@Valid @ModelAttribute("user") User user,BindingResult bindingResult, Model profilemodel) {
+ 	public String editProfile(HttpSession session,@Valid @ModelAttribute("userinfo") Userinfo userinfo,BindingResult bindingResult, Model profilemodel) {
 		if(bindingResult.hasErrors()) {
 			//return "redirect:/profile";
 		}
 		String email = (String) session.getAttribute("email");
-		User dbuser =new User();
-		Optional <User> userlist = userRepo.findById(email);
+		Userinfo dbuser =new Userinfo();
+		Optional <Userinfo> userlist = userinfoRepo.findById(email);
 		if(userlist.isPresent()){
 			dbuser=userlist.get();
 		}
 		//System.out.println(dbuser.getPassword());
 		
-		user.setEmail(email);
-		user.setUsername(dbuser.getUsername());
-		user.setPassword(dbuser.getPassword());
+		userinfo.setEmail(email);
+	    //System.out.println(userinfo.getGender());
+		userinfo.setUsername(dbuser.getUsername());
+		//userinfo.setPassword(dbuser.getPassword());
 	
-		//userRepo.save(user);
+		userinfoRepo.save(userinfo);
 			return "redirect:/profile";
 	}
 

@@ -8,6 +8,6 @@ import com.movieit.models.User;
 
 public interface UserRepository  extends JpaRepository<User, String> {
 
-	List<User> findByNameLike(String name); 
+	
 
 }

@@ -36,7 +36,7 @@
 			</div>
 		</div>
 		
-		<div layout:fragment="content" class="container mySpace" th:each="u:${user}">
+		<div layout:fragment="content" class="container mySpace" th:each="u:${userinfo}">
 		
 						<p th:inline="text" >Username : [[${u.username}]]</p>
 							
@@ -44,31 +44,31 @@
 							
 							<div class="form-group">
 				<label for="name" class="form-control-label">Name</label> <input
-					type="text" class="form-control" th:field="*{user.name}" id="name" />
-				<div class="text text-danger" th:if="${#fields.hasErrors('user.name')}"
-					th:errors="*{user.name}"></div>
+					type="text" class="form-control" th:field="*{userinfo.name}" id="name" />
+				<div class="text text-danger" th:if="${#fields.hasErrors('userinfo.name')}"
+					th:errors="*{userinfo.name}"></div>
 			</div>
 			
 			<div class="form-group">
 				<label for="surname" class="form-control-label">Surname</label> <input
-					type="text" class="form-control" th:field="*{user.surname}" id="surname" />
-				<div class="text text-danger" th:if="${#fields.hasErrors('user.surname')}"
-					th:errors="*{user.surname}"></div>
+					type="text" class="form-control" th:field="*{userinfo.surname}" id="surname" />
+				<div class="text text-danger" th:if="${#fields.hasErrors('userinfo.surname')}"
+					th:errors="*{userinfo.surname}"></div>
 			</div>
 			
 			<div class="form-group">
 				<label for="age" class="form-control-label">Age</label> <input
-					type="number" class="form-control" th:field="*{user.age}" id="age" min="12" max="99"/>
-				<div class="text text-danger" th:if="${#fields.hasErrors('user.age')}"
-					th:errors="*{user.age}"></div>
+					type="number" class="form-control" th:field="*{userinfo.age}" id="age" min="12" max="99"/>
+				<div class="text text-danger" th:if="${#fields.hasErrors('userinfo.age')}"
+					th:errors="*{userinfo.age}"></div>
 			</div>
 			
 			<div class="form-group">
 				<label for="gender" class="form-control-label">Gender</label> <select
 					 class="form-control" name="gender" id="gender" >
-					 <option th:value="Male" th:selected="${user.gender=='Male'}">Male</option><option th:value="Female" th:selected="${user.gender=='Female'}">Female</option></select>
-				<div class="text text-danger" th:if="${#fields.hasErrors('user.age')}"
-					th:errors="*{user.age}"></div>
+					 <option th:value="Male" th:selected="${userinfo.gender=='Male'}">Male</option><option th:value="Female" th:selected="${userinfo.gender=='Female'}">Female</option></select>
+				<div class="text text-danger" th:if="${#fields.hasErrors('userinfo.age')}"
+					th:errors="*{userinfo.age}"></div>
 			</div>
 			
 			

@@ -54,9 +54,6 @@ public class UserService {
 		return userRepository.findAll();
 	}
 
-	public List<User> findByName(String name) {
-		// TODO Auto-generated method stub
-		return  userRepository.findByNameLike("%"+name+"%");
-	}
+	
 
 }
