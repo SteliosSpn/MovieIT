@@ -12,9 +12,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.servlet.http.HttpSession;
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 
+import org.hibernate.Session;
+import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -236,6 +242,10 @@ public class MovieController {
 			//return "views/movie";
 		}
 	 
+	 @PersistenceContext
+	 private EntityManager manager;
+	    
+	 @Transactional
 		@PostMapping("/addReview")
 	 	public String addReview(HttpSession session,@Valid @ModelAttribute("review") Review review,BindingResult bindingResult, Model model) {
 			if(bindingResult.hasErrors()) {
@@ -251,8 +261,17 @@ public class MovieController {
 			//System.out.println(review.getMovie_id());
 			//System.out.println(review.getReview_date());
 			
+			List<Review> ReviewList=new ArrayList<Review>();
+			ReviewList=reviewRepo.findifReviewed(review.getMovie_id(), email);
+			if(ReviewList.isEmpty())reviewRepo.save(review);
+			else reviewRepo.updateReview(review.getMovie_id(),email,review.getReview_body(),review.getReview_date());
 			
-			//reviewRepo.save(review);
+			/*try{reviewRepo.save(review);}
+			catch(Exception e){
+			reviewRepo.updateReview(review.getMovie_id(),email,review.getReview_body(),review.getReview_date());
+			}*/
+			
+			//reviewRepo.updateReview(review.getMovie_id(),email,review.getReview_body(),review.getReview_date());
 			
 			return "redirect:/movie/"+myMovie.getName();
 		}

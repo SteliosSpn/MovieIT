@@ -1,6 +1,7 @@
 package com.movieit.controllers;
 
 import java.security.Principal;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -19,10 +20,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.movieit.models.Favourite;
 import com.movieit.models.Movie;
+import com.movieit.models.Review;
 import com.movieit.models.User;
 import com.movieit.models.Userinfo;
 import com.movieit.repositories.FavouriteRepository;
 import com.movieit.repositories.MovieRepository;
+import com.movieit.repositories.ReviewRepository;
 import com.movieit.repositories.UserRepository;
 import com.movieit.repositories.UserinfoRepository;
 import com.movieit.services.MovieService;
@@ -45,6 +48,9 @@ public class ProfileController {
 	
 	@Autowired
 	private UserRepository userRepo;
+	
+	@Autowired
+	private ReviewRepository reviewRepo;
 	
 	@Autowired
 	private UserinfoRepository userinfoRepo;
@@ -89,7 +95,38 @@ public class ProfileController {
 		}
 		profilemodel.addAttribute("userinfo",userinfo);
 		
+		 List<Object[]> reviewList=reviewRepo.findReviewsforUser(email);
+		 List<Review> finalReviewList=new ArrayList<Review>();
+		 for(Object[] review1:reviewList){
+			 String review_body = (String)review1[0];
+			 //System.out.println(review_body);
+			 Date review_date = (Date)review1[1];
+			// System.out.println(review_date);
+			 Integer movie_id = (Integer)review1[2];
+			// System.out.println(user_email);
+			 Review review = new Review();
+			 review.setMovie_id(movie_id);
+			 review.setReview_body(review_body);
+			 review.setReview_date(review_date);
+			 //review.setUser_email(user_email);
+			 review.setUser_email(email);
+			 finalReviewList.add(review);
+		 }
 		
+		 List<Movie> reviewListforMovies=new ArrayList<Movie>();
+		for(Review review:finalReviewList){
+			
+			Optional<Movie> tempMovie = movieRepo.findById(review.getMovie_id());
+			if(tempMovie.isPresent()){
+				//System.out.println(tempMovie);
+				//showMovies.add(tempMovie);
+				Movie movie = tempMovie.get();
+				movie.setDescription(review.getReview_body());
+				reviewListforMovies.add(movie);
+				}
+		}
+		 
+		profilemodel.addAttribute("reviews",reviewListforMovies);
 		
 		
 		return "views/profile";
