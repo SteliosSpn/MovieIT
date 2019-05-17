@@ -76,19 +76,15 @@
 			<input type="submit" value="Update Profile" class="btn btn-primary" />
 		
 			</form>
-						
 					
-</div>
-
-<div class="reviews">
-     <h2><a name="reviews"></a>Reviews</h2>
+     <h2>Reviews</h2>
      <div th:each="r:${reviews}"  style="visibility: visible; opacity: 1;">
         <div class="image">[[${r.image_url}]]</div>
         <h3>[[${r.name}]]
         <span>[[${r.release_year}]]</span></h3>
         <p>[[${r.description}]]</p>
-     </div>
-		
+        </div>
+					
 </div>
 </body>
 </html>

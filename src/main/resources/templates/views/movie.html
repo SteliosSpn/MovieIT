@@ -15,84 +15,79 @@
 				<table class="table table-hover">
 					<thead>
 						<tr>
+							<th> </th>
 							<th>Movie Name</th>
 							<th>Release Year</th>
-							<th>Image</th>
 							<th>YT URL</th>
 							<th>Rating</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr th:each="movie:${movies}">
+							<!--  <td><img th:src="${movie.image_url}"/></td>-->
+							
+							<td><img  th:src="@{${movie.image_url}}"/></td>
 							<td th:text="${movie.name}"></td>
 							<td th:text="${movie.release_year}"></td>
-							<td th:text="${movie.image_url}"></td>
-							<td th:text="${movie.trailer_url}"></td>
+							<td><iframe width="560" height="315" th:src="@{${movie.trailer_url}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></td>
 							<td th:text="${rating}"></td>
 						</tr>
 					</tbody>
-
 				</table>
 				
-				<div th:if="!${isRated}" layout:fragment="content" class="container mySpace">
+				
+				</div>
+				</div>
+	
+	<div th:if="${isRated}" class="form-control-label">
+			Movie already Rated
+			</div>
+	
+	<div th:if="!${isRated}" class="form-control-label">
 	
 		<form th:action="@{/rate}" th:object="${movie}" method="post">
-		
 			<div class="form-group">
 				<label for="total_score" class="form-control-label">Rate Here</label> <input
 					type="number" min="1" max="5" class="form-control" th:field="*{total_score}" id="total_score" />
 				<div class="text text-danger" th:if="${#fields.hasErrors('total_score')}"
 					th:errors="*{total_score}"></div>
 			</div>
-			
 			<input type="submit" value="Submit" class="btn btn-primary" />
-		
 			</form>
 			</div>
-			<div th:if="${isRated}" layout:fragment="content" class="container mySpace">Movie already Rated</div>
 			
-			</div>
-			
-			<div th:if="!${isFavourite}" layout:fragment="content" class="container mySpace">
+			<div th:if="!${isFavourite}" class="form-control-label">
 	
 		<form th:action="@{/addToFavourites}" th:object="${movie}" method="post">
 		
-			
-			
 			<input type="submit" value="Add to Favourites" class="btn btn-primary" />
 		
 			</form>
 			</div>
 			
-			<div th:if="${isFavourite}" layout:fragment="content" class="container mySpace">
+			<div th:if="${isFavourite}" class="form-control-label">
 	
 		<form th:action="@{/removeFromFavourites}" th:object="${movie}" method="post">
-		
-			
 			
 			<input type="submit" value="Remove from Favourites" class="btn btn-primary" />
 		
 			</form>
 			</div>
 			
-		</div>
-	</div>
-	
-	<div layout:fragment="content" class="container mySpace" th:each="r:${reviews}">
-	<p th:inline="text" >Username : [[${r.user_email}]]</p>
-	<p th:inline="text" >Review Date : [[${r.review_date}]]</p>
-	<p th:inline="text" >Review  : [[${r.review_body}]]</p>
+		<div class="form-control-label" th:each="r:${reviews}">
+			<p th:inline="text" >Username : 
+			<a th:href="@{'/user/' + ${r.user_email}}" th:text="${r.user_email}"></a></p>
+			<p th:inline="text" >Review Date : [[${r.review_date}]]</p>
+			<p th:inline="text" >Review  : [[${r.review_body}]]</p>
 	
 	</div>
-	
-		<div layout:fragment="content" class="container mySpace" >
 		
 						
 							
 							<form th:action="@{/addReview}" th:object="${review}" method="post">
 							
 							<div class="form-group">
-				<label for="review_body" class="form-control-label">Review</label> <input
+				<label for="review_body" class="form-control-label"></label> <input
 					type="text" class="form-control" th:field="*{review_body}" id="review_body" />
 				<div class="text text-danger" th:if="${#fields.hasErrors('review_body')}"
 					th:errors="*{review_body}"></div>
@@ -104,6 +99,8 @@
 			</form>
 						
 					
-      </div>
+      
+			
+	</div>
 </body>
 </html>

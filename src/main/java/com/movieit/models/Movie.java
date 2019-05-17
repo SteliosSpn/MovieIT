@@ -1,9 +1,15 @@
 package com.movieit.models;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -23,6 +29,12 @@ private Integer total_score;
 private Integer total_votes;
 private String image_url;
 private String trailer_url;
+
+@ManyToMany(cascade = CascadeType.ALL)
+@JoinTable(name = "TAG_MATCH", joinColumns={
+		@JoinColumn(name = "MOVIE_ID", referencedColumnName = "movie_id") }, inverseJoinColumns = {
+				@JoinColumn(name = "TAG_NAME", referencedColumnName = "name") })
+private List<Tag> tags;
 
 public Integer getMovie_id() {
 	return movie_id;

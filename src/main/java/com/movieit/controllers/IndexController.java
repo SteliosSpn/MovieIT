@@ -22,7 +22,7 @@ public class IndexController {
 	MovieService ms;
 	
 	@GetMapping("/index")
-	public String showIndexPage(HttpSession session,Principal principal,Model model, @RequestParam(defaultValue="")  String movie_name) {
+	public String showIndexPage(HttpSession session,Principal principal,Model model, @RequestParam(defaultValue="Nothing")  String movie_name) {
 		List<Movie> showMovies = new ArrayList<Movie>();
 		for(Movie movie: ms.findByMovieName(movie_name)) {
 			showMovies.add(movie);

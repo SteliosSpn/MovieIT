@@ -12,6 +12,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import nz.net.ultraq.thymeleaf.LayoutDialect;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -33,13 +35,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		// TODO Auto-generated method stub
 		return new BCryptPasswordEncoder();
 	}
+	
+	@Bean
+	public LayoutDialect layoutDialect() {
+	    return new LayoutDialect();
+	}
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests().antMatchers("/register", "/", "/about", "/login", "/css/**", "/webjars/**").permitAll()
-				//.antMatchers("/profile","/users","addTask","").hasAnyRole("USER,ADMIN")
-				  .anyRequest().hasAnyRole("USER,ADMIN")
-				//.antMatchers("/users","/addTask").hasRole("ADMIN")
+				.antMatchers("/profile","/movie").hasAnyRole("USER,ADMIN")
+				.antMatchers("/addMovie").hasRole("ADMIN")
+				  //.anyRequest().hasAnyRole("USER,ADMIN")
 				.and().formLogin().loginPage("/login").permitAll()
 				.defaultSuccessUrl("/index").and().logout().logoutSuccessUrl("/login");
 	}

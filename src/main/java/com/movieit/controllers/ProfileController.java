@@ -1,7 +1,9 @@
 package com.movieit.controllers;
 
+import java.math.RoundingMode;
 import java.security.Principal;
 import java.sql.Date;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -15,11 +17,13 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.movieit.models.Favourite;
 import com.movieit.models.Movie;
+import com.movieit.models.Rating;
 import com.movieit.models.Review;
 import com.movieit.models.User;
 import com.movieit.models.Userinfo;
@@ -173,5 +177,10 @@ public class ProfileController {
 		userinfoRepo.save(userinfo);
 			return "redirect:/profile";
 	}
-
+	
+	@GetMapping("/user/{name}")
+	 public String userHandler(Model model, HttpSession session, @PathVariable(value="name") String username) {
+		
+		 return "views/visitprofile";
+	 }
 }

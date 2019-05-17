@@ -20,7 +20,6 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.hibernate.Session;
-import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -78,7 +77,7 @@ public class MovieController {
 	@Autowired
 	private UserinfoRepository userinfoRepo;
 	
-	private static final String path = "C:\\Users\\Stelios\\workspace\\MovieIT\\src\\main\\resources\\images\\";
+	private static final String path = ".\\src\\main\\resources\\static\\images\\";
 	
 	 @GetMapping("/addMovie")
 	 public String addMovieForm(Model model, HttpSession session) {
@@ -166,8 +165,8 @@ public class MovieController {
 			
 			
 				
-				
-			
+		myMovie.setImage_url(myMovie.getImage_url().replace(".\\src\\main\\resources\\static\\images\\", "/images/"));
+			System.out.println(myMovie.getImage_url());
 		 
 		 model.addAttribute("movies", myMovie);
 		 model.addAttribute("reviews", finalReviewList);
