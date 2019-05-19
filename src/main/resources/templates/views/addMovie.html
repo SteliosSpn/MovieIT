@@ -43,6 +43,31 @@
 				<div class="text text-danger" th:if="${#fields.hasErrors('trailer_url')}"
 					th:errors="*{trailer_url}"></div>
 			</div>
+			
+			<div class="form-group">
+				<label for="action_tag" class="switch"><span class="slider round"></span>Action</label> <input
+					type="checkbox" class="form-control" name="action_tag" />
+			</div>
+			
+			<div class="form-group">
+				<label for="comedy_tag" class="switch"><span class="slider round"></span>Comedy</label> <input
+					type="checkbox" class="form-control" name="comedy_tag" />
+			</div>
+			
+			<div class="form-group">
+				<label for="drama_tag" class="switch"><span class="slider round"></span>Drama</label> <input
+					type="checkbox" class="form-control" name="drama_tag" />
+			</div>
+			
+			<div class="form-group">
+				<label for="romantic_tag" class="switch"><span class="slider round"></span>Romantic</label> <input
+					type="checkbox" class="form-control" name="romantic_tag" />
+			</div>
+			
+			<div class="form-group">
+				<label for="horror_tag" class="switch"><span class="slider round"></span>Horror</label> <input
+					type="checkbox" class="form-control" name="horror_tag" />
+			</div>
 
 			
 			<input type="submit" value="Submit" class="btn btn-primary" />

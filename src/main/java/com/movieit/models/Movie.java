@@ -36,6 +36,12 @@ private String trailer_url;
 				@JoinColumn(name = "TAG_NAME", referencedColumnName = "name") })
 private List<Tag> tags;
 
+public List<Tag> getTags() {
+	return tags;
+}
+public void setTags(List<Tag> tags) {
+	this.tags = tags;
+}
 public Integer getMovie_id() {
 	return movie_id;
 }

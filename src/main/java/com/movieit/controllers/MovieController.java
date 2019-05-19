@@ -4,22 +4,17 @@ import java.io.IOException;
 import java.math.RoundingMode;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.security.Principal;
 import java.sql.Date;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
-import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,8 +30,7 @@ import com.movieit.models.Favourite;
 import com.movieit.models.Movie;
 import com.movieit.models.Rating;
 import com.movieit.models.Review;
-import com.movieit.models.User;
-import com.movieit.models.Userinfo;
+import com.movieit.models.Tag;
 import com.movieit.repositories.FavouriteRepository;
 import com.movieit.repositories.MovieRepository;
 import com.movieit.repositories.RatingRepository;
@@ -87,7 +81,11 @@ public class MovieController {
 	 
 	 @PostMapping("/addMovie")
 	 	public String addMovieImpl(HttpSession session,@Valid @ModelAttribute("movie") Movie movie,BindingResult bindingResult,
-	 			Model model,@RequestParam("file") MultipartFile image) {
+	 			Model model,@RequestParam("file") MultipartFile image, @RequestParam(value = "action_tag", defaultValue = "off") String action,
+	 			@RequestParam(value = "comedy_tag", defaultValue = "off") String comedy,
+	 			@RequestParam(value = "drama_tag", defaultValue = "off") String drama,
+	 			@RequestParam(value = "romantic_tag", defaultValue = "off") String romantic,
+	 			@RequestParam(value = "horror_tag", defaultValue = "off") String horror) {
 			if(bindingResult.hasErrors()) {
 				return "views/addMovie";
 			}
@@ -97,9 +95,11 @@ public class MovieController {
 		    } catch (IOException e) {
 		        e.printStackTrace();
 		    }
-			System.out.println(movie.getImage_url());
-			System.out.println(image.getOriginalFilename());
-			ms.createMovie(movie);
+			//System.out.println(movie.getImage_url());
+			//System.out.println(image.getOriginalFilename());
+			System.out.println(action);
+			System.out.println(comedy);
+			ms.createMovie(movie,action,comedy,drama,romantic,horror);
 			return "views/MovieSuccess";
 		}
 	
@@ -167,7 +167,13 @@ public class MovieController {
 				
 		myMovie.setImage_url(myMovie.getImage_url().replace(".\\src\\main\\resources\\static\\images\\", "/images/"));
 			System.out.println(myMovie.getImage_url());
-		 
+		 //tags...
+			
+			model.addAttribute("tags", myMovie.getTags());
+			//related movies
+			//model.addAttribute("RelatedMovies", ms.findRelatedMovies(myMovie.getTags()));
+			ms.findRelatedMovies(myMovie.getTags());
+			
 		 model.addAttribute("movies", myMovie);
 		 model.addAttribute("reviews", finalReviewList);
 		 model.addAttribute("review",new Review());
