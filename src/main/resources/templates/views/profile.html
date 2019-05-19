@@ -8,9 +8,11 @@
 </head>
 <body>
 
-<div class="card">
-			<div class="card card-body">
-				<table class="table table-hover">
+
+
+<div >
+			
+				<table >
 					<thead>
 						<tr>
 							<th>Release Year</th>
@@ -33,10 +35,11 @@
 					
 
 				</table>
-			</div>
+			
 		</div>
 		
 		<div layout:fragment="content" class="container mySpace" th:each="u:${userinfo}">
+		
 		
 						<p th:inline="text" >Username : [[${u.username}]]</p>
 							
@@ -79,7 +82,7 @@
 					
      <h2>Reviews</h2>
      <div th:each="r:${reviews}"  style="visibility: visible; opacity: 1;">
-        <div class="image">[[${r.image_url}]]</div>
+        <img  th:src="@{${r.image_url}}"/>
         <h3>[[${r.name}]]
         <span>[[${r.release_year}]]</span></h3>
         <p>[[${r.description}]]</p>

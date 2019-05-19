@@ -77,7 +77,8 @@ public class ProfileController {
 				//System.out.println(tempMovie);
 				//showMovies.add(tempMovie);
 				Movie movie = tempMovie.get();
-				showMovies.add(movie);
+				System.out.println(movie.getName());
+				//showMovies.add(movie);
 				}
 		
 			//showMovies.add(movieRepo.findById(favmovies));
@@ -126,6 +127,7 @@ public class ProfileController {
 				//showMovies.add(tempMovie);
 				Movie movie = tempMovie.get();
 				movie.setDescription(review.getReview_body());
+				movie.setImage_url(movie.getImage_url().replace(".\\src\\main\\resources\\static\\images\\", "/images/"));
 				reviewListforMovies.add(movie);
 				}
 		}
@@ -179,7 +181,76 @@ public class ProfileController {
 	}
 	
 	@GetMapping("/user/{name}")
-	 public String userHandler(Model model, HttpSession session, @PathVariable(value="name") String username) {
+	 public String userHandler(Model profilemodel, HttpSession session, @PathVariable(value="name") String username) {
+		
+		
+		profilemodel.addAttribute("movie", new Movie());
+		//profilemodel.addAttribute("user",new User());
+		List<Movie> showMovies = new ArrayList<Movie>();
+		String email=userinfoRepo.getEmail(username);
+		Favourite favourite=new Favourite();
+		favourite.setUser_email(email);
+		List<Integer> favouriteList=favouriteRepo.findFavourites(email);
+		for( Integer favmovies : favouriteList){
+			//System.out.println(favmovies);
+			Optional<Movie> tempMovie = movieRepo.findById(favmovies);
+			if(tempMovie.isPresent()){
+				//System.out.println(tempMovie);
+				//showMovies.add(tempMovie);
+				Movie movie = tempMovie.get();
+				showMovies.add(movie);
+				}
+		
+			//showMovies.add(movieRepo.findById(favmovies));
+			
+		}
+		profilemodel.addAttribute("profilemovies", showMovies);
+		
+
+		
+		Userinfo userinfo= new Userinfo();
+		Optional <Userinfo> userinfolist = userinfoRepo.findById(email);
+		if(userinfolist.isPresent()){
+			userinfo=userinfolist.get();
+		}
+		profilemodel.addAttribute("userinfo",userinfo);
+		
+		 List<Object[]> reviewList=reviewRepo.findReviewsforUser(email);
+		 List<Review> finalReviewList=new ArrayList<Review>();
+		 for(Object[] review1:reviewList){
+			 String review_body = (String)review1[0];
+			 //System.out.println(review_body);
+			 Date review_date = (Date)review1[1];
+			// System.out.println(review_date);
+			 Integer movie_id = (Integer)review1[2];
+			// System.out.println(user_email);
+			 Review review = new Review();
+			 review.setMovie_id(movie_id);
+			 review.setReview_body(review_body);
+			 review.setReview_date(review_date);
+			 //review.setUser_email(user_email);
+			 review.setUser_email(email);
+			 finalReviewList.add(review);
+		 }
+		
+		 List<Movie> reviewListforMovies=new ArrayList<Movie>();
+		for(Review review:finalReviewList){
+			
+			Optional<Movie> tempMovie = movieRepo.findById(review.getMovie_id());
+			if(tempMovie.isPresent()){
+				//System.out.println(tempMovie);
+				//showMovies.add(tempMovie);
+				Movie movie = tempMovie.get();
+				movie.setDescription(review.getReview_body());
+				movie.setImage_url(movie.getImage_url().replace(".\\src\\main\\resources\\static\\images\\", "/images/"));
+				reviewListforMovies.add(movie);
+				}
+		}
+		 
+		profilemodel.addAttribute("reviews",reviewListforMovies);
+		
+		profilemodel.addAttribute("userprofiletile","tralalo");
+		
 		
 		 return "views/visitprofile";
 	 }
