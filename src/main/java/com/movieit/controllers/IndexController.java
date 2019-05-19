@@ -25,6 +25,7 @@ public class IndexController {
 	public String showIndexPage(HttpSession session,Principal principal,Model model, @RequestParam(defaultValue="Nothing")  String movie_name) {
 		List<Movie> showMovies = new ArrayList<Movie>();
 		for(Movie movie: ms.findByMovieName(movie_name)) {
+			movie.setImage_url(movie.getImage_url().replace(".\\src\\main\\resources\\static\\images\\", "/images/"));
 			showMovies.add(movie);
 		}
 		String email = principal.getName();

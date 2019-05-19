@@ -7,41 +7,10 @@
 <title>My Profile</title>
 </head>
 <body>
-
-
-
-<div >
-			
-				<table >
-					<thead>
-						<tr>
-							<th>Release Year</th>
-							<th>Movie</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr th:each="m:${profilemovies}">
-							<td th:text="${m.release_year}"></td>
-							<td><a th:href="@{'/movie/' + ${m.name}}" th:text="${m.name}" class="btn btn-dark"></a></td>
-							<td><form th:action="@{/removeFromFavouritesPR}" method="post">
-							<input type="hidden" name="movie_id" id="movie_id" th:value="${m.movie_id}" />
-			
-			<input type="submit" value="Remove from Favourites" class="btn btn-primary" />
-		
-			</form></td>
-						</tr>
-					</tbody>
-					
-					
-
-				</table>
-			
-		</div>
-		
 		<div layout:fragment="content" class="container mySpace" th:each="u:${userinfo}">
 		
 		
-						<p th:inline="text" >Username : [[${u.username}]]</p>
+						<h1 th:inline="text" > [[${u.username}]]</h1>
 							
 							<form th:action="@{/editProfile}" method="post">
 							
@@ -79,13 +48,49 @@
 			<input type="submit" value="Update Profile" class="btn btn-primary" />
 		
 			</form>
+			<br><br>
+			
+			<h2>Favourite Movies</h2>
+			<div class="card">	
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th> </th>
+							<th>Movie</th>
+							<th>Release Year</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="m:${profilemovies}">
+							<td><img height="82" width="82" th:src="@{${m.image_url}}"/></td>
+							<td><a th:href="@{'/movie/' + ${m.name}}" th:text="${m.name}" class="btn btn-dark"></a></td>
+							<td th:text="${m.release_year}"></td>
+							<td><form th:action="@{/removeFromFavouritesPR}" method="post">
+							<input type="hidden" name="movie_id" id="movie_id" th:value="${m.movie_id}" />
+			
+			<input type="submit" value="Remove from Favourites" class="btn btn-primary" />
+		
+			</form></td>
+						</tr>
+					</tbody>
+					
+					
+
+				</table>
+			
+		</div>
+		<br>
 					
      <h2>Reviews</h2>
-     <div th:each="r:${reviews}"  style="visibility: visible; opacity: 1;">
-        <img  th:src="@{${r.image_url}}"/>
-        <h3>[[${r.name}]]
+     <div class="card" th:each="r:${reviews}"  style="visibility: visible; opacity: 1;">
+         <h3>[[${r.name}]]
         <span>[[${r.release_year}]]</span></h3>
-        <p>[[${r.description}]]</p>
+        <table border="1"><tr><td width="82">
+        <img height="82" width="82" th:src="@{${r.image_url}}"/></td>
+       
+        <td style="text-align:left;">[[${r.description}]]</td>
+        </tr>
+        </table>
         </div>
 					
 </div>

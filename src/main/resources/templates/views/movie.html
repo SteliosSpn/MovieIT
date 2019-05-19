@@ -16,9 +16,10 @@
 					<thead>
 						<tr>
 							<th> </th>
-							<th>Movie Name</th>
-							<th>Release Year</th>
-							<th>Rating</th>
+							<th style="text-align:center;">Movie Name</th>
+							<th style="text-align:center;">Release Year</th>
+							<th style="text-align:center;">Rating</th>
+							<th style="text-align:center;">Tags</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -26,9 +27,15 @@
 							<!--  <td><img th:src="${movie.image_url}"/></td>-->
 							
 							<td><img height="82" width="82" th:src="@{${movie.image_url}}"/></td>
-							<td th:text="${movie.name}"></td>
-							<td th:text="${movie.release_year}"></td>
-							<td th:text="${rating}"></td>
+							<td style="vertical-align:middle;text-align:center;" th:text="${movie.name}"></td>
+							<td style="vertical-align:middle;text-align:center;" th:text="${movie.release_year}"></td>
+							<td style="vertical-align:middle;text-align:center;" th:text="${rating}"></td>
+							<td style="vertical-align:middle;text-align:center;"><div th:each="tag:${tags}">
+									<ul >
+									  <li th:text="${tag.name}"></li>
+									</ul>
+								</div>
+							</td>
 						</tr>
 					</tbody>
 				</table>
@@ -36,30 +43,17 @@
 				
 				</div>
 				</div>
-				
-				<br>
-				<div th:each="tag:${tags}">
-					<ul>
-					  <li th:text="${tag.name}"><h2></h2></li>
-					</ul>
-				</div>
 				<br>
 				
-				<br>
-				<div th:each="movie:${movies}">
-				<iframe width="560" height="315" th:src="@{${movie.trailer_url}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-				</div>
-				<br>
-	
-	<div th:if="${isRated}" class="form-control-label">
-			Movie already Rated
+				<div th:if="${isRated}" class="form-control-label">
+			<h2>Movie already Rated</h2>
 			</div>
 	
 	<div th:if="!${isRated}" class="form-control-label">
 	
 		<form th:action="@{/rate}" th:object="${movie}" method="post">
 			<div class="form-group">
-				<label for="total_score" class="form-control-label">Rate Here</label> <input
+				<h3>Rate Here</h3> <input
 					type="number" min="1" max="5" class="form-control" th:field="*{total_score}" id="total_score" />
 				<div class="text text-danger" th:if="${#fields.hasErrors('total_score')}"
 					th:errors="*{total_score}"></div>
@@ -67,6 +61,12 @@
 			<input type="submit" value="Submit" class="btn btn-primary" />
 			</form>
 			</div>
+				
+				<br>
+				<div th:each="movie:${movies}">
+				<iframe width="560" height="315" th:src="@{${movie.trailer_url}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+				</div>
+				<br>
 			
 			<div th:if="!${isFavourite}" class="form-control-label">
 	
@@ -86,16 +86,18 @@
 			</form>
 			</div>
 			
-		<div class="form-control-label" th:each="r:${reviews}">
-			<p th:inline="text" >Username : 
+			<br><br>
+		<div class="card" th:each="r:${reviews}">
+			<p th:inline="text" ><b>Username : </b>
 			<a th:href="@{'/user/' + ${r.user_email}}" th:text="${r.user_email}"></a></p>
-			<p th:inline="text" >Review Date : [[${r.review_date}]]</p>
-			<p th:inline="text" >Review  : [[${r.review_body}]]</p>
+			<p th:inline="text" ><b>Review Date :</b> [[${r.review_date}]]</p>
+			<p th:inline="text" ><b>Review  :</b> [[${r.review_body}]]</p>
 	
 	</div>
+	<br>
 		
-						
-							
+						<h2>You can add a review below!</h2>
+							<br>
 							<form th:action="@{/addReview}" th:object="${review}" method="post">
 							
 							<div class="form-group">
@@ -111,6 +113,7 @@
 			</form>
 					
 			<!-- Related Movies -->	
+			<br><br>
 			<div class="card">
 			<div class="card card-body">
 				<table class="table table-hover">
@@ -129,6 +132,8 @@
 				
 				</div>
 				</div>		
+				
+				<br><br>
       
 			
 	</div>

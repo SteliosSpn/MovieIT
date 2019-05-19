@@ -77,8 +77,9 @@ public class ProfileController {
 				//System.out.println(tempMovie);
 				//showMovies.add(tempMovie);
 				Movie movie = tempMovie.get();
-				System.out.println(movie.getName());
-				//showMovies.add(movie);
+				//System.out.println(movie.getName());
+				movie.setImage_url(movie.getImage_url().replace(".\\src\\main\\resources\\static\\images\\", "/images/"));
+				showMovies.add(movie);
 				}
 		
 			//showMovies.add(movieRepo.findById(favmovies));
@@ -128,6 +129,7 @@ public class ProfileController {
 				Movie movie = tempMovie.get();
 				movie.setDescription(review.getReview_body());
 				movie.setImage_url(movie.getImage_url().replace(".\\src\\main\\resources\\static\\images\\", "/images/"));
+				System.out.println(movie.getImage_url());
 				reviewListforMovies.add(movie);
 				}
 		}
@@ -198,6 +200,7 @@ public class ProfileController {
 				//System.out.println(tempMovie);
 				//showMovies.add(tempMovie);
 				Movie movie = tempMovie.get();
+				movie.setImage_url(movie.getImage_url().replace(".\\src\\main\\resources\\static\\images\\", "/images/"));
 				showMovies.add(movie);
 				}
 		
@@ -249,7 +252,7 @@ public class ProfileController {
 		 
 		profilemodel.addAttribute("reviews",reviewListforMovies);
 		
-		profilemodel.addAttribute("userprofiletile","tralalo");
+		profilemodel.addAttribute("pagetitle", username+"'s Profile");
 		
 		
 		 return "views/visitprofile";

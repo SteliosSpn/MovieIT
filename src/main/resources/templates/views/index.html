@@ -19,14 +19,16 @@
 				<table class="table table-hover">
 					<thead>
 						<tr>
-							<th>Release Year</th>
+							<th> </th>
 							<th>Movie</th>
+							<th>Release Year</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr th:each="movie:${movies}">
-							<td th:text="${movie.release_year}"></td>
+							<td><img height="82" width="82" th:src="@{${movie.image_url}}"/></td>
 							<td><a th:href="@{'/movie/' + ${movie.name}}" th:text="${movie.name}" class="btn btn-dark"></a></td>
+							<td th:text="${movie.release_year}"></td>
 						</tr>
 					</tbody>
 
@@ -34,7 +36,7 @@
 			</div>
 		</div>
 	
-		<a th:href="@{'/profile'}"  class="btn btn-dark">My Profile</a>
+		<!--<a th:href="@{'/profile'}"  class="btn btn-dark">My Profile</a>-->
 		
 	</div>
 </body>
