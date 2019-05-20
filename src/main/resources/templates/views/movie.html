@@ -12,7 +12,7 @@
 	     </form>
 		<div class="card">
 			<div class="card card-body">
-				<table class="table table-hover">
+				<table class="table table-hover" th:each="movie:${movies}">
 					<thead>
 						<tr>
 							<th> </th>
@@ -23,7 +23,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr th:each="movie:${movies}">
+						<tr >
 							<!--  <td><img th:src="${movie.image_url}"/></td>-->
 							
 							<td><img height="82" width="82" th:src="@{${movie.image_url}}"/></td>
@@ -37,6 +37,8 @@
 								</div>
 							</td>
 						</tr>
+						<tr><td Colspan="5" style="vertical-align:middle;text-align:center;" th:text="${movie.description}"></td></tr>
+						<tr><td Colspan="5" style="vertical-align:middle;text-align:center;" ><iframe width="560" height="315" th:src="@{${movie.trailer_url}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></td></tr>
 					</tbody>
 				</table>
 				
@@ -63,10 +65,7 @@
 			</div>
 				
 				<br>
-				<div th:each="movie:${movies}">
-				<iframe width="560" height="315" th:src="@{${movie.trailer_url}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-				</div>
-				<br>
+				
 			
 			<div th:if="!${isFavourite}" class="form-control-label">
 	

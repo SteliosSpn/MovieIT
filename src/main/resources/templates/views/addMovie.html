@@ -27,7 +27,7 @@
 			
 			<div class="form-group">
 				<label for="description" class="form-control-label">Description</label> <input
-					type="text" class="form-control" th:field="*{description}" id="description" />
+					type="text" class="form-control" th:field="*{description}" id="description" required />
 				<div class="text text-danger" th:if="${#fields.hasErrors('description')}"
 					th:errors="*{description}"></div>
 			</div>
