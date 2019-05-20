@@ -30,18 +30,7 @@ private Integer total_votes;
 private String image_url;
 private String trailer_url;
 
-@ManyToMany(cascade = CascadeType.ALL)
-@JoinTable(name = "TAG_MATCH", joinColumns={
-		@JoinColumn(name = "MOVIE_ID", referencedColumnName = "movie_id") }, inverseJoinColumns = {
-				@JoinColumn(name = "TAG_NAME", referencedColumnName = "name") })
-private List<Tag> tags;
 
-public List<Tag> getTags() {
-	return tags;
-}
-public void setTags(List<Tag> tags) {
-	this.tags = tags;
-}
 public Integer getMovie_id() {
 	return movie_id;
 }

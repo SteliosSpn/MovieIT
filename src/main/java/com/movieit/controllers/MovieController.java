@@ -35,6 +35,7 @@ import com.movieit.repositories.FavouriteRepository;
 import com.movieit.repositories.MovieRepository;
 import com.movieit.repositories.RatingRepository;
 import com.movieit.repositories.ReviewRepository;
+import com.movieit.repositories.TagRepository;
 import com.movieit.repositories.UserinfoRepository;
 import com.movieit.services.FavouriteService;
 import com.movieit.services.MovieService;
@@ -66,6 +67,9 @@ public class MovieController {
 	private MovieService ms;
 	
 	@Autowired
+	private TagRepository tagRepo;
+	
+	@Autowired
 	private ReviewRepository reviewRepo;
 	
 	@Autowired
@@ -85,7 +89,13 @@ public class MovieController {
 	 			@RequestParam(value = "comedy_tag", defaultValue = "off") String comedy,
 	 			@RequestParam(value = "drama_tag", defaultValue = "off") String drama,
 	 			@RequestParam(value = "romantic_tag", defaultValue = "off") String romantic,
-	 			@RequestParam(value = "horror_tag", defaultValue = "off") String horror) {
+	 			@RequestParam(value = "horror_tag", defaultValue = "off") String horror,
+	 			@RequestParam(value = "crime_tag", defaultValue = "off") String crime,
+	 			@RequestParam(value = "adventure_tag", defaultValue = "off") String adventure,
+	 			@RequestParam(value = "animation_tag", defaultValue = "off") String animation,
+	 			@RequestParam(value = "scifi_tag", defaultValue = "off") String scifi,
+	 			@RequestParam(value = "thriller_tag", defaultValue = "off") String thriller,
+	 			@RequestParam(value = "mystery_tag", defaultValue = "off") String mystery) {
 			if(bindingResult.hasErrors()) {
 				return "views/addMovie";
 			}
@@ -99,7 +109,7 @@ public class MovieController {
 			//System.out.println(image.getOriginalFilename());
 			System.out.println(action);
 			System.out.println(comedy);
-			ms.createMovie(movie,action,comedy,drama,romantic,horror);
+			ms.createMovie(movie,action,comedy,drama,romantic,horror,crime,adventure,animation,scifi,thriller,mystery);
 			return "views/MovieSuccess";
 		}
 	
@@ -166,13 +176,13 @@ public class MovieController {
 			
 				
 		myMovie.setImage_url(myMovie.getImage_url().replace(".\\src\\main\\resources\\static\\images\\", "/images/"));
-			System.out.println(myMovie.getImage_url());
-		 //tags...
-			
-			model.addAttribute("tags", myMovie.getTags());
+			//System.out.println(myMovie.getImage_url());
+			//tags...
+			model.addAttribute("tags", tagRepo.findTags(myMovie.getMovie_id()));
 			//related movies
-			//model.addAttribute("RelatedMovies", ms.findRelatedMovies(myMovie.getTags()));
-			ms.findRelatedMovies(myMovie.getTags());
+			
+			
+			model.addAttribute("relatedMovies", ms.findRelatedMovies(tagRepo.findTags(myMovie.getMovie_id()),myMovie.getMovie_id()));
 			
 		 model.addAttribute("movies", myMovie);
 		 model.addAttribute("reviews", finalReviewList);

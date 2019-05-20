@@ -1,45 +1,40 @@
 package com.movieit.models;
 
-import java.util.List;
+import java.io.Serializable;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.IdClass;
+import javax.persistence.Table;
 
 @Entity
-public class Tag {
+@Table(name="tag")
+@IdClass(Tag.class)
+public class Tag implements Serializable {
 
-	@Id
-	private String name;
-	@ManyToMany(mappedBy = "tags")
-	private List<Movie> movies;
+@Id
+private Integer movie_id;
+@Id
+private String tag_name;
+public Integer getMovie_id() {
+	return movie_id;
+}
+public void setMovie_id(Integer movie_id) {
+	this.movie_id = movie_id;
+}
+public String getTag_name() {
+	return tag_name;
+}
+public void setTag_name(String tag_name) {
+	this.tag_name = tag_name;
+}
 
-	public String getName() {
-		return name;
-	}
+public Tag() {
+	
+}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public List<Movie> getMovies() {
-		return movies;
-	}
-
-	public void setMovies(List<Movie> movies) {
-		this.movies = movies;
-	}
-
-	public Tag(String name, List<Movie> movies) {
-		this.name = name;
-		this.movies = movies;
-	}
-
-	public Tag() {
-	}
-
-	public Tag(String name) {
-		this.name = name;
-	}
+public Tag(String tag_name) {
+	this.tag_name = tag_name;
+}
 
 }

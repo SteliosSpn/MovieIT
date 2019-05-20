@@ -32,7 +32,7 @@
 							<td style="vertical-align:middle;text-align:center;" th:text="${rating}"></td>
 							<td style="vertical-align:middle;text-align:center;"><div th:each="tag:${tags}">
 									<ul >
-									  <li th:text="${tag.name}"></li>
+									  <li th:text="${tag}"></li>
 									</ul>
 								</div>
 							</td>
@@ -111,26 +111,28 @@
 		
 			</form>
 					
-			<!-- Related Movies -->	
-			<br><br>
-			<div class="card">
-			<div class="card card-body">
-				<table class="table table-hover">
-					<thead>
-						<tr th:each="movie:${Relatedmovies}">
-							<th th:text="${movie.name}"></th>
+		<br>
+		<h2>Related Movies</h2>
+		<br>
+				
+				<table class="table table-hover" >
+					<thead >
+						<tr>
+							<th style="vertical-align:middle;text-align:center;" th:each="r:${relatedMovies}"   ><a th:href="@{'/movie/' + ${r.name}}" th:text="${r.name}" ></a> </th>
+							
 						</tr>
 					</thead>
 					<tbody>
-						<tr th:each="movie:${Relatedmovies}">
-							<td><img height="82" width="82" th:src="@{${movie.image_url}}"/></td>
+						<tr >
+							
+							
+							<td style="vertical-align:middle;text-align:center;" th:each="r:${relatedMovies}"><img height="82" width="82" th:src="@{${r.image_url}}"/></td>
+							
+								
 						</tr>
+
 					</tbody>
 				</table>
-				
-				
-				</div>
-				</div>		
 				
 				<br><br>
       
