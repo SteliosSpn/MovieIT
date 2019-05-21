@@ -1,9 +1,8 @@
 package com.movieit.controllers;
 
-import java.math.RoundingMode;
+
 import java.security.Principal;
 import java.sql.Date;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -23,20 +22,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.movieit.models.Favourite;
 import com.movieit.models.Movie;
-import com.movieit.models.Rating;
+
 import com.movieit.models.Review;
-import com.movieit.models.User;
+
 import com.movieit.models.Userinfo;
 import com.movieit.repositories.FavouriteRepository;
 import com.movieit.repositories.MovieRepository;
 import com.movieit.repositories.ReviewRepository;
 import com.movieit.repositories.UserRepository;
 import com.movieit.repositories.UserinfoRepository;
-import com.movieit.services.MovieService;
+import com.movieit.services.FavouriteService;
+
+import com.movieit.services.ReviewService;
 import com.movieit.services.UserService;
 
-//import com.chicago.models.Log;
-//import com.chicago.services.UserService;
+
 
 @Controller
 public class ProfileController {
@@ -59,40 +59,20 @@ public class ProfileController {
 	@Autowired
 	private UserinfoRepository userinfoRepo;
 	
+	@Autowired
+	private FavouriteService favouriteService;
+	
+	@Autowired
+	private ReviewService rs;
+	
 	@GetMapping("/profile")
 	public String showProfilePage(HttpSession session,Model profilemodel, Principal principal, 
 			@RequestParam(defaultValue="")  String activity) {
 		
 		profilemodel.addAttribute("movie", new Movie());
-		//profilemodel.addAttribute("user",new User());
-		List<Movie> showMovies = new ArrayList<Movie>();
 		String email=(String)session.getAttribute("email");
-		Favourite favourite=new Favourite();
-		favourite.setUser_email(email);
-		List<Integer> favouriteList=favouriteRepo.findFavourites(email);
-		for( Integer favmovies : favouriteList){
-			//System.out.println(favmovies);
-			Optional<Movie> tempMovie = movieRepo.findById(favmovies);
-			if(tempMovie.isPresent()){
-				//System.out.println(tempMovie);
-				//showMovies.add(tempMovie);
-				Movie movie = tempMovie.get();
-				//System.out.println(movie.getName());
-				movie.setImage_url(movie.getImage_url().replace(".\\src\\main\\resources\\static\\images\\", "/images/"));
-				showMovies.add(movie);
-				}
-		
-			//showMovies.add(movieRepo.findById(favmovies));
-			
-		}
-		profilemodel.addAttribute("profilemovies", showMovies);
-		
-		/*User user =new User();
-		Optional <User> userlist = userRepo.findById(email);
-		if(userlist.isPresent()){
-			user=userlist.get();
-		}
-		profilemodel.addAttribute("user",user);*/
+		//favourites...
+		profilemodel.addAttribute("profilemovies", favouriteService.showFavouriteMovies(email));
 		
 		Userinfo userinfo= new Userinfo();
 		Optional <Userinfo> userinfolist = userinfoRepo.findById(email);
@@ -101,40 +81,8 @@ public class ProfileController {
 		}
 		profilemodel.addAttribute("userinfo",userinfo);
 		
-		 List<Object[]> reviewList=reviewRepo.findReviewsforUser(email);
-		 List<Review> finalReviewList=new ArrayList<Review>();
-		 for(Object[] review1:reviewList){
-			 String review_body = (String)review1[0];
-			 //System.out.println(review_body);
-			 Date review_date = (Date)review1[1];
-			// System.out.println(review_date);
-			 Integer movie_id = (Integer)review1[2];
-			// System.out.println(user_email);
-			 Review review = new Review();
-			 review.setMovie_id(movie_id);
-			 review.setReview_body(review_body);
-			 review.setReview_date(review_date);
-			 //review.setUser_email(user_email);
-			 review.setUser_email(email);
-			 finalReviewList.add(review);
-		 }
-		
-		 List<Movie> reviewListforMovies=new ArrayList<Movie>();
-		for(Review review:finalReviewList){
-			
-			Optional<Movie> tempMovie = movieRepo.findById(review.getMovie_id());
-			if(tempMovie.isPresent()){
-				//System.out.println(tempMovie);
-				//showMovies.add(tempMovie);
-				Movie movie = tempMovie.get();
-				movie.setDescription(review.getReview_body());
-				movie.setImage_url(movie.getImage_url().replace(".\\src\\main\\resources\\static\\images\\", "/images/"));
-				System.out.println(movie.getImage_url());
-				reviewListforMovies.add(movie);
-				}
-		}
-		 
-		profilemodel.addAttribute("reviews",reviewListforMovies);
+		//reviews... 
+		profilemodel.addAttribute("reviews",rs.showReviews(email));
 		
 		
 		return "views/profile";
@@ -146,7 +94,6 @@ public class ProfileController {
 		if(bindingResult.hasErrors()) {
 			return "redirect:/profile";
 		}
-		//Movie myMovie = (Movie) session.getAttribute("movie");
 		
 		String email = (String) session.getAttribute("email");
 		Favourite favourite = new Favourite();
@@ -155,9 +102,8 @@ public class ProfileController {
 		System.out.println(movie.getMovie_id());
 		favouriteRepo.delete(favourite);
 
-		//redirect:/index.html
 		return "redirect:/profile";
-		//return "views/movie";
+	
 	}
 	
 	@PostMapping("/editProfile")
@@ -171,13 +117,9 @@ public class ProfileController {
 		if(userlist.isPresent()){
 			dbuser=userlist.get();
 		}
-		//System.out.println(dbuser.getPassword());
-		
 		userinfo.setEmail(email);
-	    //System.out.println(userinfo.getGender());
-		userinfo.setUsername(dbuser.getUsername());
-		//userinfo.setPassword(dbuser.getPassword());
-	
+	    userinfo.setUsername(dbuser.getUsername());
+		
 		userinfoRepo.save(userinfo);
 			return "redirect:/profile";
 	}
@@ -187,25 +129,20 @@ public class ProfileController {
 		
 		
 		profilemodel.addAttribute("movie", new Movie());
-		//profilemodel.addAttribute("user",new User());
+
 		List<Movie> showMovies = new ArrayList<Movie>();
 		String email=userinfoRepo.getEmail(username);
 		Favourite favourite=new Favourite();
 		favourite.setUser_email(email);
 		List<Integer> favouriteList=favouriteRepo.findFavourites(email);
 		for( Integer favmovies : favouriteList){
-			//System.out.println(favmovies);
+			
 			Optional<Movie> tempMovie = movieRepo.findById(favmovies);
 			if(tempMovie.isPresent()){
-				//System.out.println(tempMovie);
-				//showMovies.add(tempMovie);
 				Movie movie = tempMovie.get();
 				movie.setImage_url(movie.getImage_url().replace(".\\src\\main\\resources\\static\\images\\", "/images/"));
 				showMovies.add(movie);
 				}
-		
-			//showMovies.add(movieRepo.findById(favmovies));
-			
 		}
 		profilemodel.addAttribute("profilemovies", showMovies);
 		
@@ -222,16 +159,16 @@ public class ProfileController {
 		 List<Review> finalReviewList=new ArrayList<Review>();
 		 for(Object[] review1:reviewList){
 			 String review_body = (String)review1[0];
-			 //System.out.println(review_body);
+			 
 			 Date review_date = (Date)review1[1];
-			// System.out.println(review_date);
+			
 			 Integer movie_id = (Integer)review1[2];
-			// System.out.println(user_email);
+			
 			 Review review = new Review();
 			 review.setMovie_id(movie_id);
 			 review.setReview_body(review_body);
 			 review.setReview_date(review_date);
-			 //review.setUser_email(user_email);
+			 
 			 review.setUser_email(email);
 			 finalReviewList.add(review);
 		 }
@@ -241,8 +178,7 @@ public class ProfileController {
 			
 			Optional<Movie> tempMovie = movieRepo.findById(review.getMovie_id());
 			if(tempMovie.isPresent()){
-				//System.out.println(tempMovie);
-				//showMovies.add(tempMovie);
+		
 				Movie movie = tempMovie.get();
 				movie.setDescription(review.getReview_body());
 				movie.setImage_url(movie.getImage_url().replace(".\\src\\main\\resources\\static\\images\\", "/images/"));

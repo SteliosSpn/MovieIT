@@ -17,12 +17,11 @@ public class RatingService {
 	
 	public boolean findIfAlreadyRated(Rating rating){
 		Optional<Rating> ratingList=ratingRepository.findById(rating);
-		//System.out.println(rating.getEmail());
-				//System.out.println(rating.getMovie_id());
+		
 		if(ratingList.isPresent()){
-			//System.out.println("true");
+		
 			return true;}
-		else{ //System.out.println("false");
+		else{ 
 			return false;}
 		
 		

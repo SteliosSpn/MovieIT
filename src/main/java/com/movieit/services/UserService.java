@@ -42,7 +42,7 @@ public class UserService {
 
 	public boolean isUserPresent(String email) {
 		Optional<User> opt=userRepository.findById(email);
-		//User u=userRepository.findById(email);
+		
 		if(opt.isPresent())
 			return true;
 		

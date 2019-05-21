@@ -30,7 +30,6 @@ import com.movieit.models.Favourite;
 import com.movieit.models.Movie;
 import com.movieit.models.Rating;
 import com.movieit.models.Review;
-import com.movieit.models.Tag;
 import com.movieit.repositories.FavouriteRepository;
 import com.movieit.repositories.MovieRepository;
 import com.movieit.repositories.RatingRepository;
@@ -105,29 +104,27 @@ public class MovieController {
 		    } catch (IOException e) {
 		        e.printStackTrace();
 		    }
-			//System.out.println(movie.getImage_url());
-			//System.out.println(image.getOriginalFilename());
+			
 			System.out.println(action);
 			System.out.println(comedy);
 			ms.createMovie(movie,action,comedy,drama,romantic,horror,crime,adventure,animation,scifi,thriller,mystery);
 			return "views/MovieSuccess";
 		}
 	
-	 //th:href="@{/movie(id=${movie.name})}" || th:href="@{/movie/${movie.name}}" || session
+	 
 	 @GetMapping("/movie/{name}")
 	 public String movieHandler(Model model, HttpSession session, @PathVariable(value="name") String movie_name) {
-		//model.addAttribute("movie", new Movie());
+		
 		 model.addAttribute("movie", new Movie());
 		 double score = 0.0;
 		 boolean isRated = false;
 		 boolean isFavourite = false;
-		// System.out.println(movie_name);
+		
 		 Movie myMovie = ms.findByName(movie_name);
 		 if(myMovie.getTotal_votes() != 0) {
-			// System.out.println(myMovie.getTotal_score());
-			// System.out.println(myMovie.getTotal_votes());
+			
 			 score = (double)myMovie.getTotal_score()/(double)myMovie.getTotal_votes();
-			// System.out.println(score);
+			
 			 String scores = null;
 			 DecimalFormat df = new DecimalFormat();
 			 df.setRoundingMode(RoundingMode.DOWN);
@@ -159,16 +156,16 @@ public class MovieController {
 		 List<Review> finalReviewList=new ArrayList<Review>();
 		 for(Object[] review1:reviewList){
 			 String review_body = (String)review1[0];
-			 //System.out.println(review_body);
+			 
 			 Date review_date = (Date)review1[1];
-			// System.out.println(review_date);
+			
 			 String user_email = (String)review1[2];
-			// System.out.println(user_email);
+			
 			 Review review = new Review();
 			 review.setMovie_id(myMovie.getMovie_id());
 			 review.setReview_body(review_body);
 			 review.setReview_date(review_date);
-			 //review.setUser_email(user_email);
+			 
 			 review.setUser_email(userinfoRepo.getUsername(user_email));
 			 finalReviewList.add(review);
 		 }
@@ -176,7 +173,7 @@ public class MovieController {
 			
 				
 		myMovie.setImage_url(myMovie.getImage_url().replace(".\\src\\main\\resources\\static\\images\\", "/images/"));
-			//System.out.println(myMovie.getImage_url());
+			
 			//tags...
 			model.addAttribute("tags", tagRepo.findTags(myMovie.getMovie_id()));
 			//related movies
@@ -206,15 +203,12 @@ public class MovieController {
 			
 			ratingRepo.save(rating);
 			
-			
-			
-			
 			myMovie.setTotal_score(movie.getTotal_score()+myMovie.getTotal_score());
 			myMovie.setTotal_votes(myMovie.getTotal_votes()+1);
 			movierepo.save(myMovie);
-			//redirect:/index.html
+			
 			return "redirect:/movie/"+myMovie.getName();
-			//return "views/movie";
+		
 		}
 	 
 	 @PostMapping("/addToFavourites")
@@ -232,9 +226,8 @@ public class MovieController {
 			
 			favouriteRepo.save(favourite);
 
-			//redirect:/index.html
 			return "redirect:/movie/"+myMovie.getName();
-			//return "views/movie";
+	
 		}
 	 
 	 @PostMapping("/removeFromFavourites")
@@ -252,9 +245,8 @@ public class MovieController {
 			
 			favouriteRepo.delete(favourite);
 
-			//redirect:/index.html
 			return "redirect:/movie/"+myMovie.getName();
-			//return "views/movie";
+			
 		}
 	 
 	 @PersistenceContext
@@ -271,22 +263,11 @@ public class MovieController {
 			review.setMovie_id(myMovie.getMovie_id());
 			review.setUser_email(email);
 			review.setReview_date(new Date(System.currentTimeMillis()));
-		
-			//System.out.println(review.getReview_body());
-			//System.out.println(review.getMovie_id());
-			//System.out.println(review.getReview_date());
 			
 			List<Review> ReviewList=new ArrayList<Review>();
 			ReviewList=reviewRepo.findifReviewed(review.getMovie_id(), email);
 			if(ReviewList.isEmpty())reviewRepo.save(review);
 			else reviewRepo.updateReview(review.getMovie_id(),email,review.getReview_body(),review.getReview_date());
-			
-			/*try{reviewRepo.save(review);}
-			catch(Exception e){
-			reviewRepo.updateReview(review.getMovie_id(),email,review.getReview_body(),review.getReview_date());
-			}*/
-			
-			//reviewRepo.updateReview(review.getMovie_id(),email,review.getReview_body(),review.getReview_date());
 			
 			return "redirect:/movie/"+myMovie.getName();
 		}

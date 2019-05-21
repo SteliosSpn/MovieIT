@@ -85,7 +85,7 @@
      <div class="card" th:each="r:${reviews}"  style="visibility: visible; opacity: 1;">
          <h3>[[${r.name}]]
         <span>[[${r.release_year}]]</span></h3>
-        <table border="1"><tr><td width="82">
+        <table><tr><td width="82">
         <img height="82" width="82" th:src="@{${r.image_url}}"/></td>
        
         <td style="text-align:left;">[[${r.description}]]</td>

@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -116,16 +117,9 @@ public class MovieService {
                 .sorted(Map.Entry.<Movie, Double>comparingByValue().reversed())
                 .forEachOrdered(x -> result.put(x.getKey(), x.getValue()));
         
-        List<Movie> top = new ArrayList<Movie>(result.keySet());
+        List<Movie> sorted = new ArrayList<Movie>(result.keySet());
+        List<Movie> top = sorted.stream().limit(5).collect(Collectors.toList());
         return top;
-        
-        /*List<Movie> keys = unsortMap.entrySet().stream()
-        		  .map(Map.Entry::getKey)
-        		  .sorted()
-        		  .limit(5)
-        		  .collect(Collectors.toList());
-        System.out.println("edwwwwwwwwwwwwwwwwwwwwwww");
-        return keys;*/
 	}
 
 	public List<Movie> findByMovieName(String name) {
